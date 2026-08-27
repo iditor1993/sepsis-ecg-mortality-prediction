@@ -64,8 +64,13 @@ def mews(df: pd.DataFrame) -> pd.Series:
 
 
 def main() -> None:
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cohort", default="cohort_ecg.parquet")
+    parser.add_argument("--suffix", default="", help="输出文件名后缀（如 _all）")
+    args = parser.parse_args()
     datadir = REPO_ROOT / "data"
-    cohort = pd.read_parquet(datadir / "cohort_ecg.parquet")
+    cohort = pd.read_parquet(datadir / args.cohort)
 
     con = duckdb.connect(DEFAULT_DB, read_only=True)
     try:
@@ -86,13 +91,13 @@ def main() -> None:
                  "gcs_min", "fio2_max"]
     scores["n_missing_components"] = vit[comp_cols].isna().sum(axis=1)
     scores = scores.merge(vit[["stay_id"] + comp_cols], on="stay_id")
-    scores.to_parquet(datadir / "clinical_scores.parquet", index=False)
+    scores.to_parquet(datadir / f"clinical_scores{args.suffix}.parquet", index=False)
 
     # ---- M1+ 85 列特征 ----
     vital_stats = [c for c in vit.columns
                    if c not in ("subject_id", "stay_id", "gcs_min", "fio2_max")]
     m1p = vit[["subject_id", "stay_id"] + vital_stats].merge(lab, on="stay_id", how="left")
-    m1p.to_parquet(datadir / "m1plus_features.parquet", index=False)
+    m1p.to_parquet(datadir / f"m1plus_features{args.suffix}.parquet", index=False)
 
     n = len(cohort)
     print(f"临床特征提取完成（N={n:,}）")

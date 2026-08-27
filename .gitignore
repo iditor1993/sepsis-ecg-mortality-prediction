@@ -4,3 +4,5 @@ data/*
 !data/.gitkeep
 # 患者级预测文件不入库（PhysioNet DUA）
 results/*.parquet
+__pycache__/
+*.pyc

@@ -14,8 +14,13 @@ DEFAULT_DB = "E:/clinical_research/MIMIC_IV_3.1/mimic_iv_3_1.duckdb"
 
 
 def main() -> None:
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cohort", default="cohort_ecg.parquet")
+    parser.add_argument("--suffix", default="")
+    args = parser.parse_args()
     datadir = REPO_ROOT / "data"
-    cohort = pd.read_parquet(datadir / "cohort_ecg.parquet")
+    cohort = pd.read_parquet(datadir / args.cohort)
 
     con = duckdb.connect(DEFAULT_DB, read_only=True)
     try:
@@ -26,7 +31,7 @@ def main() -> None:
         con.close()
 
     assert cov["stay_id"].is_unique and len(cov) == len(cohort)
-    cov.to_parquet(datadir / "covariates.parquet", index=False)
+    cov.to_parquet(datadir / f"covariates{args.suffix}.parquet", index=False)
 
     n = len(cov)
     print(f"协变量提取完成（N={n:,}）:")
