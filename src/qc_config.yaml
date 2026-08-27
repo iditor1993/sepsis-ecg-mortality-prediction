@@ -1,9 +1,14 @@
 # qc_config.yaml — ECG 自动质控阈值（SAP 3.3 / 3.4 节）
-# 质控失败者计入流程图排除项，不做人工挽救。
-# TODO: 阈值待预设（数据锁定前冻结）。
+# 状态：PROPOSED（提议值）——数据锁定（W3，特征矩阵生成）前须确认并冻结；
+#        冻结前修改属 SAP 允许的锁定前变更，冻结后修改须记偏离日志。
+# 规则：t0±24 h 窗口内取距 t0 最近一份；质控失败计入流程图排除项，不做人工挽救。
 
-min_duration_s: 8        # ECG 最短时长（秒）
-max_missing_leads: 2     # 允许的最大缺失导联数
-# baseline_wander: ...   # 基线漂移阈值（待定）
-# saturation: ...        # 电极饱和阈值（待定）
-# hf_noise: ...          # 高频噪声阈值（待定）
+window_h: 24             # ECG 链接窗口 ±小时（SAP 3.4 节，方案固定，勿改）
+min_duration_s: 8        # ECG 最短时长（秒，SAP 3.3 节）
+expected_fs: 500         # 采样率（MIMIC-IV-ECG 标准 500 Hz，不等即"采样率异常"）
+max_missing_leads: 2     # 允许的最大缺失导联数（缺失=全 NaN/恒值导联，SAP 3.3 节）
+
+# 信号质量（PROPOSED，待冻结）：
+clip_run_ms: 100         # 电极饱和：导联取值停留于本导联极值的最长连续段 >100 ms
+baseline_wander_mv: 1.0  # 基线漂移：0.6 s 中值滤波估计的基线 p95-p05 极差 >1.0 mV
+hf_noise_rms_mv: 0.05    # 高频噪声：>40 Hz 四阶 Butterworth 高通分量 RMS >0.05 mV
