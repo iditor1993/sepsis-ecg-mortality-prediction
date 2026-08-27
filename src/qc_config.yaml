@@ -1,0 +1,9 @@
+# qc_config.yaml — ECG 自动质控阈值（SAP 3.3 / 3.4 节）
+# 质控失败者计入流程图排除项，不做人工挽救。
+# TODO: 阈值待预设（数据锁定前冻结）。
+
+min_duration_s: 8        # ECG 最短时长（秒）
+max_missing_leads: 2     # 允许的最大缺失导联数
+# baseline_wander: ...   # 基线漂移阈值（待定）
+# saturation: ...        # 电极饱和阈值（待定）
+# hf_noise: ...          # 高频噪声阈值（待定）

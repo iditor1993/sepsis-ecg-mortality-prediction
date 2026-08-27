@@ -1,0 +1,23 @@
+# environment.yml — 分析环境（SAP 9.1 节）
+# Python 3.12 + scikit-learn / XGBoost / lifelines / torch
+# R 侧（pROC、pmsampsize、rmda）由 renv.lock 锁定
+name: sepsis-ecg
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+dependencies:
+  - python=3.12
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - xgboost
+  - lifelines
+  - pytorch
+  - duckdb
+  - pyarrow
+  - wfdb
+  - shap
+  - matplotlib
+  - pip

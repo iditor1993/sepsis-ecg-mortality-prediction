@@ -1,0 +1,4 @@
+# 数据文件不入库（SAP 附录 B），仅保留锁定记录
+data/*
+!data/DATA_LOCK.md
+!data/.gitkeep
