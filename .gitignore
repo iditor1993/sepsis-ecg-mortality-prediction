@@ -2,3 +2,5 @@
 data/*
 !data/DATA_LOCK.md
 !data/.gitkeep
+# 患者级预测文件不入库（PhysioNet DUA）
+results/*.parquet
