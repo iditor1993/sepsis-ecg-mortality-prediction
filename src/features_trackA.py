@@ -1,9 +1,9 @@
 """features_trackA.py — Track A 主特征提取（SAP 5.1 节，W3）。
 
 V14 一维 CNN 自编码器的 encoder 部分**冻结迁移**（权重不在本队列重训）：
-  编码器来源：V14 项目 data/ECG_feature/v14_ecg_encoder.keras
-    （无监督自编码器，于 V14 项目 MIMIC 队列约 4 万条 Lead II 信号上训练，
-      不涉及任何结局标签）
+  编码器来源：models/v14_ecg_encoder.keras（仓库内置；溯源与 SHA-256 见
+    models/v14_ecg_encoder_provenance.md；无监督自编码器，于 V14 项目
+    MIMIC 队列约 4 万条 Lead II 信号上训练，不涉及任何结局标签）
   结构：Input(2500,1) -> Conv1D(16,7,s2) -> Conv1D(32,5,s2) -> Conv1D(64,3,s5)
         -> GlobalAveragePooling1D -> Dense(16) => z1-z16
   预处理与 V14 训练时完全一致：Lead II（缺失回退 Lead I/首通道）->
@@ -11,9 +11,9 @@ V14 一维 CNN 自编码器的 encoder 部分**冻结迁移**（权重不在本�
 
 注意：SAP 5.1 表述为"Lead II 8 s 片段"，V14 编码器原生输入为 10 s@250 Hz；
       冻结迁移须匹配训练输入规格，故按 10 s 执行（本队列 ECG 均为 10 s），
-      SAP 文本待 V1.3 修订更正。
+      SAP 文本已由 V1.3 修订更正。
 
-流程：多进程读取并预处理波形（缓存 .npy）-> GPU 批量推理 -> 输出
+流程：多进程读取并预处理波形（缓存 .npy）-> 批量推理 -> 输出
       data/features_trackA.parquet（subject_id, stay_id, z1-z16, load_ok）。
 """
 
@@ -29,10 +29,8 @@ from scipy.signal import resample
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ECG_ROOT = Path("E:/clinical_research/MIMIC_IV_3.1/ecg")
-V14_ENCODER = Path(
-    "D:/BaiduSyncdisk/work/part-time job/sepsis_associated_research/"
-    "ECG_sepsis/V14/data/ECG_feature/v14_ecg_encoder.keras"
-)
+# 仓库内置编码器（自 V14 项目逐字节复制；溯源见 models/v14_ecg_encoder_provenance.md）
+V14_ENCODER = REPO_ROOT / "models" / "v14_ecg_encoder.keras"
 SIGNAL_LEN = 2500  # 10 s @ 250 Hz（V14 原生输入规格）
 LATENT_DIM = 16
 
