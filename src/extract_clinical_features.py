@@ -80,6 +80,11 @@ def main() -> None:
     finally:
         con.close()
 
+    # 守卫：sql 输出不得含重复的 id 列（历史 bug：piv.* 带入 stay_id_1）
+    for bad in [c for c in vit.columns if c.endswith("_1")]:
+        raise RuntimeError(f"sql/05 输出含重复列 {bad}，请检查 SQL")
+    assert vit["stay_id"].is_unique and lab["stay_id"].is_unique
+
     # ---- 评分 ----
     scores = vit[["subject_id", "stay_id"]].copy()
     scores["qsofa"] = ((vit["sbp_min"] <= 100).astype(int)

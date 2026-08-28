@@ -88,7 +88,8 @@ def main() -> None:
     d, lo, hi = boot_delta(yte, p_a, p_m1, rng)
     rows.append({"model": "M3+(Track A)", "n_features": len(sel_a),
                  "features": ",".join(sel_a), "test_auc": auc_a,
-                 "delta_vs_m1": d, "ci_lo": lo, "ci_hi": hi,
+                 "comparison": "M3+(TA) vs M1",
+                 "delta_auc": d, "ci_lo": lo, "ci_hi": hi,
                  "best_cfg": str(best_a["cfg"])})
     print(f"[M3+TA] test AUC {auc_a:.4f}；ΔAUC vs M1 {d:+.4f} ({lo:+.4f}~{hi:+.4f})",
           flush=True)
@@ -107,16 +108,18 @@ def main() -> None:
     d, lo, hi = boot_delta(yte, p_b, p_m1, rng)
     rows.append({"model": "M3+(Track B)", "n_features": len(sel_b),
                  "features": ",".join(sel_b), "test_auc": auc_b,
-                 "delta_vs_m1": d, "ci_lo": lo, "ci_hi": hi,
+                 "comparison": "M3+(TB) vs M1",
+                 "delta_auc": d, "ci_lo": lo, "ci_hi": hi,
                  "best_cfg": str(best_b["cfg"])})
     print(f"[M3+TB] test AUC {auc_b:.4f}；ΔAUC vs M1 {d:+.4f} ({lo:+.4f}~{hi:+.4f})",
           flush=True)
 
-    # 两轨 M3+ 之间配对对比
+    # 两轨 M3+ 之间配对对比（独立语义行：comparison 标明差值方向）
     d, lo, hi = boot_delta(yte, p_b, p_a, rng)
     rows.append({"model": "M3+(TB) vs M3+(TA)", "n_features": np.nan,
                  "features": "", "test_auc": np.nan,
-                 "delta_vs_m1": d, "ci_lo": lo, "ci_hi": hi, "best_cfg": ""})
+                 "comparison": "AUC(M3+TB) - AUC(M3+TA)",
+                 "delta_auc": d, "ci_lo": lo, "ci_hi": hi, "best_cfg": ""})
     print(f"\n[M3+ 双轨] ΔAUC(TB-TA) {d:+.4f} ({lo:+.4f}~{hi:+.4f})")
 
     res = pd.DataFrame(rows)

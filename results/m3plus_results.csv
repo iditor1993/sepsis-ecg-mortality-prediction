@@ -1,4 +1,4 @@
-﻿model,n_features,features,test_auc,delta_vs_m1,ci_lo,ci_hi,best_cfg
-M3+(Track A),13.0,"sofa_score,news,mews,lactate,admission_age,male,charlson_comorbidity_index,admission_emergency,site_bloodstream,site_other,site_respiratory,z2,z10",0.7907385766806723,-0.006035901678620441,-0.015330768831789443,0.00315668697331854,"{'max_depth': 6, 'eta': 0.01, 'min_child_weight': 1}"
-M3+(Track B),31.0,"sofa_score,news,mews,lactate,admission_age,charlson_comorbidity_index,admission_emergency,site_bloodstream,site_other,site_respiratory,tb1,tb3,tb4,tb5,tb6,tb7,tb8,tb11,tb13,tb15,tb16,tb17,tb18,tb19,tb20,tb21,tb24,tb25,tb27,tb28,tb31",0.7805160189075631,-0.01648510987860597,-0.03257403835688067,0.00024872452332869394,"{'max_depth': 3, 'eta': 0.05, 'min_child_weight': 1}"
-M3+(TB) vs M3+(TA),,,,-0.010508299797278983,-0.02724104960896562,0.006250625820690941,
+﻿model,n_features,features,test_auc,comparison,delta_auc,ci_lo,ci_hi,best_cfg
+M3+(Track A),13.0,"sofa_score,news,mews,lactate,admission_age,male,charlson_comorbidity_index,admission_emergency,site_bloodstream,site_other,site_respiratory,z2,z10",0.7907385766806723,M3+(TA) vs M1,-0.006035901678620441,-0.015330768831789443,0.00315668697331854,"{'max_depth': 6, 'eta': 0.01, 'min_child_weight': 1}"
+M3+(Track B),31.0,"sofa_score,news,mews,lactate,admission_age,charlson_comorbidity_index,admission_emergency,site_bloodstream,site_other,site_respiratory,tb1,tb3,tb4,tb5,tb6,tb7,tb8,tb11,tb13,tb15,tb16,tb17,tb18,tb19,tb20,tb21,tb24,tb25,tb27,tb28,tb31",0.7805160189075631,M3+(TB) vs M1,-0.01648510987860597,-0.03257403835688067,0.00024872452332869394,"{'max_depth': 3, 'eta': 0.05, 'min_child_weight': 1}"
+M3+(TB) vs M3+(TA),,,,AUC(M3+TB) - AUC(M3+TA),-0.010508299797278983,-0.02724104960896562,0.006250625820690941,

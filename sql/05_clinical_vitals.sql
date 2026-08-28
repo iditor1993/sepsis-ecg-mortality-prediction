@@ -102,7 +102,7 @@ fio2 AS (
     GROUP BY c.stay_id
 )
 SELECT c.subject_id, c.stay_id,
-       piv.*, gcs.gcs_min, fio2.fio2_max
+       piv.* EXCLUDE (stay_id), gcs.gcs_min, fio2.fio2_max
 FROM c
 LEFT JOIN piv  ON piv.stay_id = c.stay_id
 LEFT JOIN gcs  ON gcs.stay_id = c.stay_id
