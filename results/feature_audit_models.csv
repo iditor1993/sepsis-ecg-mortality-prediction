@@ -1,0 +1,12 @@
+﻿model_file,n_features,id_like_in_features
+m0_models.joblib,1,
+m1_models.joblib,17,
+m1plus_xgb.joblib,98,
+m2_models.joblib,16,
+m3_models.joblib,33,
+m3plus_ta_xgb.joblib,13,
+m3plus_tb_xgb.joblib,31,
+m4_trackB_xgb.joblib,49,
+m4_xgb.joblib,33,
+m4plus_trackb_xgb.joblib,130,
+m4plus_xgb.joblib,114,
