@@ -25,3 +25,7 @@
 该编码器训练所用 ECG 与本研究队列同出 MIMIC-IV-ECG，可能存在样本重叠；
 因其训练无监督、无标签，属自监督预训练范畴（论文方法学部分应注明
 编码器来源与本条目）。
+
+## License
+
+The V14 ECG encoder was trained from scratch by the project author. It is released under the MIT License. See the repository LICENSE file.
