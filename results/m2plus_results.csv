@@ -1,0 +1,4 @@
+﻿model,n_features,test_auc,comparison,delta_auc,ci_lo,ci_hi,best_cfg
+M2+(Track A),16.0,0.635657825630252,M2+(Track A) vs M2-LR（同轨）,-0.0064817559520912605,-0.02025676975460989,0.008452139971534477,"{'max_depth': 6, 'eta': 0.01, 'min_child_weight': 5}"
+M2+(Track B),32.0,0.6851181722689076,M2+(Track B) vs M2-LR（同轨）,0.004472829438991273,-0.002199001516520263,0.010939901766435648,"{'max_depth': 3, 'eta': 0.05, 'min_child_weight': 1}"
+M2+(TB) vs M2+(TA),,,AUC(M2+TB) - AUC(M2+TA),0.04953208031629101,0.019727252337278914,0.07800801762253742,
