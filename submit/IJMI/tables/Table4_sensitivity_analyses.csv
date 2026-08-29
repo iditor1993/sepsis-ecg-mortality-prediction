@@ -1,0 +1,13 @@
+﻿ID,Analysis,Main result
+S1,"ECG window [t0−48 h, t0)",ΔAUC +0.0006 (95% CI -0.0072 to +0.0087)
+S2,Outcome from admission,ΔAUC -0.0016 (95% CI -0.0056 to +0.0025)
+S3,Exclude ICU-only subcohort,Not applicable; cohort is ICU-level
+S5,Track B(tb32) 替换 Track A 的 M3,AUC M3 0.7828; ΔAUC -0.0139
+S10,M3 去除乳酸,AUC M3 0.7729; ΔAUC -0.0240
+S4,完整病例 M3（对比同子集 MICE-M1）,AUC M3 0.8035; ΔAUC -0.0029
+S9,Calibration method comparison,Brier raw 0.1265; Platt 0.1266; isotonic 0.1269
+S6,排除房颤/起搏心律 ECG,ΔAUC -0.0018 (95% CI -0.0071 to +0.0035)
+S7,SOFA 改 t0 时刻值（0 例回退）,ΔAUC -0.0004 (95% CI -0.0043 to +0.0034)
+S8,Competing-risk (Fine-Gray) framework,Lactate subdistribution HR 1.293; P 3.85e-43
+S11,ECG-availability indicator,Independent ΔAUC +0.0016; adjusted M3 ΔAUC -0.0626
+Re-ENC,Re-training encoder internally,M3' AUC 0.7942; vs M1' ΔAUC -0.0025

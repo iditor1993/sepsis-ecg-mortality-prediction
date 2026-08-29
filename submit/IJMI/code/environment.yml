@@ -1,0 +1,33 @@
+# environment.yml — 分析环境（SAP 9.1 节）
+#
+# 【勘误 D-003】SAP 9.1 计划值为 Python 3.12；实际全程执行为系统
+# Python 3.11.7（无 3.12 特有特性依赖，无分析影响）。本文件按 SAP
+# "版本记录于 environment.yml"的职能如实记录**实际执行环境**；
+# 各包实测版本见 requirements_lock.txt（pip freeze 全量）。
+# R 侧（pROC、pmsampsize、rmda）未启用（MICE 等均在 Python 实现，
+# 见偏离日志 D-003），renv.lock 保留空骨架。
+name: sepsis-ecg
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+dependencies:
+  - python=3.11          # 实际执行：3.11.7（SAP 计划值 3.12，见 D-003）
+  - numpy=2.4.6
+  - pandas=2.3.3
+  - scipy=1.17.1
+  - scikit-learn=1.9.0
+  - xgboost=3.2.0
+  - lifelines=0.30.3
+  - pytorch=2.7.1
+  - duckdb=1.5.3
+  - pyarrow=24.0.0
+  - wfdb=4.3.1
+  - shap=0.51.0
+  - matplotlib=3.10.9
+  - statsmodels=0.14.6
+  - joblib=1.5.3
+  - pyyaml=6.0.3
+  - pip
+  - pip:
+    - tensorflow==2.21.0   # conda 渠道无此版本，走 pip（Windows 原生无 GPU 支持）

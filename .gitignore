@@ -6,3 +6,8 @@ data/*
 results/*.parquet
 __pycache__/
 *.pyc
+
+# Local dependencies and Office temporary files
+node_modules/
+~$*.docx
+~$*.doc
