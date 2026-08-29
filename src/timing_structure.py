@@ -66,48 +66,51 @@ def main() -> None:
         av[c_] = av[c_].fillna(0)
 
     stats_rows = [
-        ("t0 - icu_intime 中位数（h）", f"{dt_h.median():.2f}"),
-        ("t0 - icu_intime IQR（h）", f"{dt_h.quantile(0.25):.2f} ~ {dt_h.quantile(0.75):.2f}"),
-        ("t0 早于 ICU 入住比例", f"{(dt_h < 0).mean():.1%}"),
-        ("t0 在 ICU 入住 ±6h 内比例", f"{(dt_h.abs() <= 6).mean():.1%}"),
-        ("生命体征 [t0-24h,t0) 可得率", f"{av['vit_pre'].mean():.1%}"),
-        ("生命体征 (t0,t0+24h] 可得率", f"{av['vit_post'].mean():.1%}"),
-        ("检验 [t0-24h,t0) 可得率", f"{av['lab_pre'].mean():.1%}"),
-        ("检验 (t0,t0+24h] 可得率", f"{av['lab_post'].mean():.1%}"),
-        ("乳酸 [t0-24h,t0) 可得率", f"{av['lac_pre'].mean():.1%}"),
-        ("乳酸 (t0,t0+24h] 可得率", f"{av['lac_post'].mean():.1%}"),
+        ("t0 - ICU admission time, median (h)", f"{dt_h.median():.2f}"),
+        ("t0 - ICU admission time, IQR (h)", f"{dt_h.quantile(0.25):.2f} ~ {dt_h.quantile(0.75):.2f}"),
+        ("t0 before ICU admission", f"{(dt_h < 0).mean():.1%}"),
+        ("t0 within +-6 h of ICU admission", f"{(dt_h.abs() <= 6).mean():.1%}"),
+        ("Vital signs [t0-24h,t0) availability", f"{av['vit_pre'].mean():.1%}"),
+        ("Vital signs (t0,t0+24h] availability", f"{av['vit_post'].mean():.1%}"),
+        ("Laboratory tests [t0-24h,t0) availability", f"{av['lab_pre'].mean():.1%}"),
+        ("Laboratory tests (t0,t0+24h] availability", f"{av['lab_post'].mean():.1%}"),
+        ("Lactate [t0-24h,t0) availability", f"{av['lac_pre'].mean():.1%}"),
+        ("Lactate (t0,t0+24h] availability", f"{av['lac_post'].mean():.1%}"),
     ]
-    stats_df = pd.DataFrame(stats_rows, columns=["指标", "数值"])
+    stats_df = pd.DataFrame(stats_rows, columns=["Metric", "Value"])
     stats_df.to_csv(results_dir / "timing_structure.csv", index=False,
                     encoding="utf-8-sig")
     print(stats_df.to_string(index=False))
 
     # 双联图
+    # Two-panel figure
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.8))
     ax = axes[0]
-    ax.hist(dt_h.clip(-24, 72), bins=60, color="#4472a8", alpha=0.85)
-    ax.axvline(0, color="darkred", ls="--", lw=1.5)
-    ax.set_xlabel("t0 − ICU 入住时间（小时，左截 −24 / 右截 72）")
-    ax.set_ylabel("患者数")
-    ax.set_title("t0 紧贴 ICU 入住：中位 −1.5h，55.3% 早于 ICU")
+    ax.hist(dt_h.clip(-24, 72), bins=60, color='#4472a8', alpha=0.85)
+    ax.axvline(0, color='darkred', ls='--', lw=1.5)
+    ax.set_xlabel('t0 - ICU admission time (h; clipped -24 to 72)')
+    ax.set_ylabel('Patients')
+    ax.set_title(f't0 near ICU admission: median {dt_h.median():.1f} h; '
+
+                 f'{100 * (dt_h < 0).mean():.1f}% before ICU')
 
     ax = axes[1]
-    groups = ["生命体征", "检验（cr/wbc/bili）", "乳酸"]
-    pre = [av["vit_pre"].mean(), av["lab_pre"].mean(), av["lac_pre"].mean()]
-    post = [av["vit_post"].mean(), av["lab_post"].mean(), av["lac_post"].mean()]
+    groups = ['Vital signs', 'Labs (cr/wbc/bili)', 'Lactate']
+    pre = [av['vit_pre'].mean(), av['lab_pre'].mean(), av['lac_pre'].mean()]
+    post = [av['vit_post'].mean(), av['lab_post'].mean(), av['lac_post'].mean()]
     x = np.arange(len(groups))
-    ax.bar(x - 0.18, pre, 0.36, label="[t0−24h, t0)", color="#c0504d")
-    ax.bar(x + 0.18, post, 0.36, label="(t0, t0+24h]", color="#4472a8")
+    ax.bar(x - 0.18, pre, 0.36, label='[t0-24h, t0)', color='#c0504d')
+    ax.bar(x + 0.18, post, 0.36, label='(t0, t0+24h]', color='#4472a8')
     for i, (p1, p2) in enumerate(zip(pre, post)):
-        ax.text(i - 0.18, p1 + 0.02, f"{p1:.0%}", ha="center", fontsize=9)
-        ax.text(i + 0.18, p2 + 0.02, f"{p2:.0%}", ha="center", fontsize=9)
+        ax.text(i - 0.18, p1 + 0.02, f'{p1:.0%}', ha='center', fontsize=9)
+        ax.text(i + 0.18, p2 + 0.02, f'{p2:.0%}', ha='center', fontsize=9)
     ax.set_xticks(x, groups)
     ax.set_ylim(0, 1.1)
-    ax.set_ylabel("可得率")
-    ax.set_title("t0 前数据物理稀缺，t0 后自然积累")
+    ax.set_ylabel('Availability')
+    ax.set_title('Pre-t0 data are physically sparse; post-t0 data accumulate naturally')
     ax.legend()
     fig.tight_layout()
-    fig.savefig(results_dir / "figures" / "timing_structure.png", dpi=200)
+    fig.savefig(results_dir / 'figures' / 'timing_structure.png', dpi=200)
     print("\n输出 -> results/timing_structure.csv, results/figures/timing_structure.png")
 
 
