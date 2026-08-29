@@ -11,3 +11,6 @@ __pycache__/
 node_modules/
 ~$*.docx
 ~$*.doc
+
+# Local submission package (not intended for the public/code repository)
+submit/
