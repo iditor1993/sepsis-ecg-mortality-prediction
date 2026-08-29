@@ -112,24 +112,30 @@ def main() -> None:
     p_m2 = m2.predict_proba(sc.transform(df.loc[te, f_m2]))[:, 1]
     auc_m2 = roc_auc_score(yte, p_m2)
     print(f"[M2'] test AUC {auc_m2:.4f}（主分析 M2 0.6419）", flush=True)
+    pred_te = pd.read_parquet(results_dir / "test_predictions.parquet")
+    d0, lo0, hi0 = boot_delta(yte, p_m2, pred_te["M2_cal"].to_numpy(), rng)
     rows.append({"model": "M2'（内部重训编码器潜向量 LR）", "test_auc": auc_m2,
-                 "comparison": "对照主分析 M2 0.6419", "delta_auc": np.nan,
-                 "ci_lo": np.nan, "ci_hi": np.nan})
+                 "comparison": "AUC(M2') - AUC(M2 主分析)",
+                 "delta_auc": d0, "ci_lo": lo0, "ci_hi": hi0})
+    print(f"[M2' vs M2] ΔAUC {d0:+.4f} ({lo0:+.4f}~{hi0:+.4f})", flush=True)
 
     f_m1 = SCORE_COLS + ["lactate"] + cov
     p_m1 = lr_mice(df, f_m1, tr, te, ytr, mice_cols)
+    auc_m1 = roc_auc_score(yte, p_m1)
+    rows.append({"model": "M1'（内部重训配套，临床基线）", "test_auc": auc_m1,
+                 "comparison": "绝对 AUC（M1' 不含 ECG 特征）",
+                 "delta_auc": np.nan, "ci_lo": np.nan, "ci_hi": np.nan})
     f_m3 = f_m1 + Z_COLS
     p_m3 = lasso_mice(df, f_m3, tr, te, ytr, mice_cols)
-    auc_m1, auc_m3 = roc_auc_score(yte, p_m1), roc_auc_score(yte, p_m3)
+    auc_m3 = roc_auc_score(yte, p_m3)
     d, lo, hi = boot_delta(yte, p_m3, p_m1, rng)
     rows.append({"model": "M3'（内部重训编码器版 M3）", "test_auc": auc_m3,
-                 "comparison": "M3' vs M1'（ΔAUC）", "delta_auc": d,
+                 "comparison": "AUC(M3') - AUC(M1')", "delta_auc": d,
                  "ci_lo": lo, "ci_hi": hi})
     print(f"[M3'] test AUC {auc_m3:.4f} vs M1' {auc_m1:.4f}；"
           f"ΔAUC {d:+.4f} ({lo:+.4f}~{hi:+.4f})", flush=True)
 
     # 与主分析 M3（Track A）配对对比
-    pred_te = pd.read_parquet(results_dir / "test_predictions.parquet")
     d2, lo2, hi2 = boot_delta(yte, p_m3, pred_te["M3_cal"].to_numpy(), rng)
     rows.append({"model": "M3' vs M3（主分析）", "test_auc": np.nan,
                  "comparison": "AUC(M3') - AUC(M3)", "delta_auc": d2,
